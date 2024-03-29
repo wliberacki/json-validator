@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [text, setText] = useState('');
+  const [validationResult, setValidationResult] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await axios.post('/api/verify', { text });
+    setValidationResult(response.data);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Walidacja tekstu</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
+        <button type="submit">Sprawdź</button>
+      </form>
+      {validationResult && (
+        <div>
+          Wynik: {validationResult.valid ? 'Poprawny' : 'Niepoprawny'}
+          {validationResult.reason && (
+            <p>Przyczyna: {validationResult.reason}</p>
+          )}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
