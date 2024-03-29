@@ -95,5 +95,5 @@ func main() {
 	})
 
 	// Uruchamianie serwera na porcie 8080
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":8080", router)
 }
