@@ -24,17 +24,21 @@ type Policy struct {
 	} `json:"PolicyDocument"`
 }
 
-// Funkcja do walidacji pola Resource
+// Funkcja walidująca pole Resource
 func validateResource(resource string) bool {
+	// Sprawdzenie pustego pola
+	if resource == "" {
+		return false
+	}
+
 	// Sprawdzenie pojedynczego gwiazdka
 	if resource == "*" {
 		return false
 	}
 
-	// Dodatkowe walidacje (opcjonalne)
-	// Przykład: sprawdzanie innych znaków specjalnych za pomocą regexu
-	matched, _ := regexp.MatchString(`^[a-zA-Z0-9:/\-_.]+$`, resource)
-	return matched
+	//sprawdzanie calego stringa
+	matched, _ := regexp.MatchString(`[*]`, resource)
+	return !matched
 }
 
 // Funkcja obsługi żądania HTTP
@@ -60,16 +64,16 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 	for _, statement := range policy.PolicyDocument.Statement {
 		if !validateResource(statement.Resource) {
 			valid = false
-			break // Stop iterating if any Resource is invalid
+			break // Zatrzymanie iteracji, jeśli pole Resource jest nieprawidłowe
 		}
 	}
 
-	// Zwrócenie odpowiedzi "OK"
+	// Zwrócenie odpowiedzi
 	if valid {
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "true") // Resource is valid (no single asterisk)
+		fmt.Fprintf(w, "true") // Pole Resource jest poprawne
 	} else {
-		http.Error(w, "Pole Resource zawiera niedozwolone znaki", http.StatusBadRequest)
+		http.Error(w, "Pole Resource zawiera niedozwolone znaki lub jest puste", http.StatusBadRequest)
 	}
 }
 
