@@ -1,33 +1,38 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function App() {
   const [text, setText] = useState('');
-  const [validationResult, setValidationResult] = useState(null);
+  const [response, setResponse] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const response = await axios.post('/api/verify', { text });
-    setValidationResult(response.data);
+  const checkText = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data.response);
+      setResponse(data.response);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   };
 
   return (
     <div>
-      <h1>Walidacja tekstu</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-        <button type="submit">Sprawdź</button>
-      </form>
-      {validationResult && (
-        <div>
-          Wynik: {validationResult.valid ? 'Poprawny' : 'Niepoprawny'}
-          {validationResult.reason && (
-            <p>Przyczyna: {validationResult.reason}</p>
-          )}
-        </div>
-      )}
+      <input type="text" value={text} onChange={e => setText(e.target.value)} />
+      <button onClick={checkText}>Sprawdź</button>
+      <p>{response}</p>
     </div>
   );
-};
+}
 
 export default App;
