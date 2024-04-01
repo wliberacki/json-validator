@@ -18,16 +18,16 @@ function App() {
       if (!res.ok) {
         const errorData = await res.text();
         console.log(errorData);
-        throw new Error(errorData); // Pass the error data to the Error constructor
+        throw new Error(errorData); 
       }
 
       const data = await res.json();
       console.log(data);
-      setResponse(JSON.stringify(data)); // Convert the data to a string before setting it
+      setResponse(JSON.stringify(data));
       setError(null);
     } catch (error) {
       console.log(error);
-      setError(error.toString()); // Convert the error to a string before setting it
+      setError(error.toString());
     }
   };
 

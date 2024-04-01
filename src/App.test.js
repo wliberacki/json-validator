@@ -11,7 +11,6 @@ test('renders JSON Validator header', () => {
 test('validates JSON input with Resource as *', async () => {
   const { getByText, getByRole } = render(<App />);
   
-  // Mock the fetch function to simulate a server response
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,
@@ -19,7 +18,6 @@ test('validates JSON input with Resource as *', async () => {
     })
   );
 
-  // Simulate typing in the textarea
   const jsonInput = `{
     "PolicyDocument": {
         "Statement": [
@@ -31,20 +29,16 @@ test('validates JSON input with Resource as *', async () => {
 }`;
   fireEvent.change(getByRole('textbox'), { target: { value: jsonInput } });
 
-  // Click the button
   fireEvent.click(getByText('Check'));
 
-  // Wait for the response to be displayed
   await waitFor(() => getByText('Response(AWS::IAM::Role Policy): {"valid":false}'));
 
-  // Check that the response is displayed
   expect(getByText('Response(AWS::IAM::Role Policy): {"valid":false}')).toBeInTheDocument();
 });
 
 test('validates JSON input with empty Resource', async () => {
   const { getByText, getByRole } = render(<App />);
   
-  // Mock the fetch function to simulate a server response
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,
@@ -52,7 +46,6 @@ test('validates JSON input with empty Resource', async () => {
     })
   );
 
-  // Simulate typing in the textarea
   const jsonInput = `{
     "PolicyDocument": {
         "Statement": [
@@ -64,20 +57,16 @@ test('validates JSON input with empty Resource', async () => {
 }`;
   fireEvent.change(getByRole('textbox'), { target: { value: jsonInput } });
 
-  // Click the button
   fireEvent.click(getByText('Check'));
 
-  // Wait for the response to be displayed
   await waitFor(() => getByText('Response(AWS::IAM::Role Policy): {"valid":false}'));
 
-  // Check that the response is displayed
   expect(getByText('Response(AWS::IAM::Role Policy): {"valid":false}')).toBeInTheDocument();
 });
 
 test('validates JSON input with Resource with special signs and *', async () => {
   const { getByText, getByRole } = render(<App />);
   
-  // Mock the fetch function to simulate a server response
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,
@@ -85,7 +74,6 @@ test('validates JSON input with Resource with special signs and *', async () => 
     })
   );
 
-  // Simulate typing in the textarea
   const jsonInput = `{
     "PolicyDocument": {
         "Statement": [
@@ -97,20 +85,16 @@ test('validates JSON input with Resource with special signs and *', async () => 
 }`;
   fireEvent.change(getByRole('textbox'), { target: { value: jsonInput } });
 
-  // Click the button
   fireEvent.click(getByText('Check'));
 
-  // Wait for the response to be displayed
   await waitFor(() => getByText('Response(AWS::IAM::Role Policy): {"valid":false}'));
 
-  // Check that the response is displayed
   expect(getByText('Response(AWS::IAM::Role Policy): {"valid":false}')).toBeInTheDocument();
 });
 
 test('validates empty JSON input', async () => {
   const { getByText, getByRole } = render(<App />);
   
-  // Mock the fetch function to simulate a server response
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,
@@ -118,24 +102,19 @@ test('validates empty JSON input', async () => {
     })
   );
 
-  // Simulate typing in the textarea
   const jsonInput = `{}`;
   fireEvent.change(getByRole('textbox'), { target: { value: jsonInput } });
 
-  // Click the button
   fireEvent.click(getByText('Check'));
 
-  // Wait for the response to be displayed
   await waitFor(() => getByText('Response(AWS::IAM::Role Policy): {"valid":false}'));
 
-  // Check that the response is displayed
   expect(getByText('Response(AWS::IAM::Role Policy): {"valid":false}')).toBeInTheDocument();
 });
 
 test('validates correct JSON input with special signs', async () => {
   const { getByText, getByRole } = render(<App />);
   
-  // Mock the fetch function to simulate a server response
   global.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,
@@ -143,7 +122,6 @@ test('validates correct JSON input with special signs', async () => {
     })
   );
 
-  // Simulate typing in the textarea
   const jsonInput = `{"PolicyDocument": {
     "Statement": [
         {
@@ -153,12 +131,9 @@ test('validates correct JSON input with special signs', async () => {
 }}`;
   fireEvent.change(getByRole('textbox'), { target: { value: jsonInput } });
 
-  // Click the button
   fireEvent.click(getByText('Check'));
 
-  // Wait for the response to be displayed
   await waitFor(() => getByText('Response(AWS::IAM::Role Policy): {"valid":true}'));
 
-  // Check that the response is displayed
   expect(getByText('Response(AWS::IAM::Role Policy): {"valid":true}')).toBeInTheDocument();
 });
