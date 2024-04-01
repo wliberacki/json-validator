@@ -46,7 +46,7 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 	// Odczytanie danych JSON z ciała żądania
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Błąd odczytu danych", http.StatusBadRequest)
+		http.Error(w, "Data reading error", http.StatusBadRequest)
 		return
 	}
 
@@ -54,7 +54,7 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 	var policy Policy
 	err = json.Unmarshal(body, &policy)
 	if err != nil {
-		http.Error(w, "Nieprawidłowy format JSON", http.StatusBadRequest)
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
 		return
 	}
 

@@ -39,7 +39,7 @@ function App() {
         onChange={e => setText(e.target.value)} 
         style={{ width: '50%', height: '200px' }} 
       />
-      <button onClick={checkText}>Sprawdź</button>
+      <button onClick={checkText}>Check</button>
       <p>Response(AWS::IAM::Role Policy): {response}</p>
       {error && <p> {error}</p>}
     </div>
