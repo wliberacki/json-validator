@@ -10,7 +10,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Typ reprezentujący strukturę dokumentu JSON
 type Policy struct {
 	PolicyName     string `json:"PolicyName"`
 	PolicyDocument struct {
@@ -24,33 +23,26 @@ type Policy struct {
 	} `json:"PolicyDocument"`
 }
 
-// Funkcja walidująca pole Resource
 func validateResource(resource string) bool {
-	// Sprawdzenie pustego pola
 	if resource == "" {
 		return false
 	}
 
-	// Sprawdzenie pojedynczego gwiazdka
 	if resource == "*" {
 		return false
 	}
 
-	//sprawdzanie calego stringa
 	matched, _ := regexp.MatchString(`[*]`, resource)
 	return !matched
 }
 
-// Funkcja obsługi żądania HTTP
 func verifyHandler(w http.ResponseWriter, r *http.Request) {
-	// Odczytanie danych JSON z ciała żądania
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Data reading error", http.StatusBadRequest)
 		return
 	}
 
-	// Dekodowanie JSON do struktury Policy
 	var policy Policy
 	err = json.Unmarshal(body, &policy)
 	if err != nil {
@@ -58,8 +50,6 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Walidacja pola Resource dla każdego oświadczenia
-	// Walidacja pola Resource dla każdego oświadczenia
 	valid := false
 
 	if len(policy.PolicyDocument.Statement) > 0 {
@@ -67,28 +57,24 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 		for _, statement := range policy.PolicyDocument.Statement {
 			if !validateResource(statement.Resource) {
 				valid = false
-				break // Zatrzymanie iteracji, jeśli pole Resource jest nieprawidłowe
+				break
 			}
 		}
 	}
 
-	// Zwrócenie odpowiedzi
-	w.WriteHeader(http.StatusOK) // Always return 200 status code
+	w.WriteHeader(http.StatusOK)
 	if valid {
-		fmt.Fprintf(w, "true") // Pole Resource jest poprawne
+		fmt.Fprintf(w, "true")
 	} else {
 		fmt.Fprintf(w, "false")
 	}
 }
 
 func main() {
-	// Utworzenie routera HTTP
 	router := mux.NewRouter()
 
-	// Zdefiniowanie endpointu do weryfikacji
 	router.HandleFunc("/api/verify", verifyHandler).Methods("POST")
 
-	// Ustawienie obsługi CORS
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -101,7 +87,5 @@ func main() {
 			next.ServeHTTP(w, r)
 		})
 	})
-
-	// Uruchamianie serwera na porcie 8080
 	http.ListenAndServe(":8080", router)
 }
