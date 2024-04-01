@@ -59,21 +59,25 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Walidacja pola Resource dla każdego oświadczenia
-	valid := true
+	// Walidacja pola Resource dla każdego oświadczenia
+	valid := false
 
-	for _, statement := range policy.PolicyDocument.Statement {
-		if !validateResource(statement.Resource) {
-			valid = false
-			break // Zatrzymanie iteracji, jeśli pole Resource jest nieprawidłowe
+	if len(policy.PolicyDocument.Statement) > 0 {
+		valid = true
+		for _, statement := range policy.PolicyDocument.Statement {
+			if !validateResource(statement.Resource) {
+				valid = false
+				break // Zatrzymanie iteracji, jeśli pole Resource jest nieprawidłowe
+			}
 		}
 	}
 
 	// Zwrócenie odpowiedzi
+	w.WriteHeader(http.StatusOK) // Always return 200 status code
 	if valid {
-		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "true") // Pole Resource jest poprawne
 	} else {
-		http.Error(w, "Pole Resource zawiera niedozwolone znaki lub jest puste", http.StatusBadRequest)
+		fmt.Fprintf(w, "false")
 	}
 }
 
