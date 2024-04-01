@@ -12,11 +12,12 @@
 
 ## Frontend Setup
 
-1. Navigate back to the main project directory: `cd ..`
-2. `npm install`
-3. `npm start`
+1. New terminal.
+2. Navigate to the main project directory (/json-validator).
+3. `npm install`
+2. `npm start`
 
 ## Testing the Application
 
-1. Navigate back to the main project directory: `cd ..`.
+1. Navigate to the main project directory (/json-validator).
 2. Run the tests: `npm test`.
